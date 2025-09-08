@@ -112,7 +112,7 @@ namespace PipeMethodCalls
 					messageStream.WriteVarInt(request.GenericArguments.Length);
 					foreach (Type genericArgument in request.GenericArguments)
 					{
-						messageStream.WriteUtf8String(genericArgument.ToString());
+						messageStream.WriteUtf8String(genericArgument.AssemblyQualifiedName);
 					}
 				}
 				else
@@ -236,7 +236,7 @@ namespace PipeMethodCalls
 					for (int i = 0; i < genericArgumentCount; i++)
 					{
 						string genericArgumentString = messageStream.ReadUtf8String();
-						genericArguments[i] = Type.GetType(genericArgumentString);
+						genericArguments[i] = Type.GetType(genericArgumentString, throwOnError: true);
 					}
 
 					messageObject = new SerializedPipeRequest { CallId = callId, MethodName = methodName, Parameters = parameters, GenericArguments = genericArguments };
